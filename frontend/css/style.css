@@ -1,0 +1,327 @@
+body {
+  margin:0;
+  font-family: 'Segoe UI', sans-serif;
+  background:#f1f5f9;
+}
+
+nav {
+  display:flex;
+  justify-content:space-between;
+  padding:15px 30px;
+  background:#0f172a;
+  color:white;
+}
+
+nav ul {
+  display:flex;
+  gap:20px;
+  list-style:none;
+}
+
+nav a {
+  color:white;
+  text-decoration:none;
+}
+
+nav a:hover {
+  color:#38bdf8;
+}
+
+.container { padding:40px; }
+
+.hero {
+  padding:100px 20px;
+  text-align:center;
+  background:linear-gradient(to right,#6366f1,#3b82f6);
+  color:white;
+}
+
+.card {
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:15px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+  transition:0.3s;
+}
+
+.card:hover { transform:translateY(-5px); }
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+}
+
+.form {
+  max-width:400px;
+  margin:auto;
+  background:white;
+  padding:30px;
+  border-radius:12px;
+}
+
+input, textarea {
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+}
+
+button {
+  padding:10px;
+  background:#2563eb;
+  color:white;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+button:hover { background:#1d4ed8; }
+
+.badge {
+  background:red;
+  color:white;
+  padding:3px 8px;
+  border-radius:50%;
+  font-size:12px;
+}
+
+.hero h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  font-size: 18px;
+}
+
+.hero button {
+  margin-top: 15px;
+  background: white;
+  color: #2563eb;
+  font-weight: bold;
+}
+
+.features {
+  padding: 50px 40px;
+  text-align: center;
+}
+
+.features h2 {
+  margin-bottom: 30px;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.feature-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+}
+
+.courses {
+  padding: 50px 40px;
+  background: #f8fafc;
+}
+
+.courses h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.course-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: 0.3s;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #0f172a;
+  color: white;
+}
+
+.course-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.course-header h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.course-header p {
+  color: #64748b;
+}
+
+.course-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.search-box {
+  width: 60%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.filter-tags button {
+  margin-left: 10px;
+  padding: 8px 15px;
+  border: none;
+  background: #e2e8f0;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.filter-tags .active {
+  background: #2563eb;
+  color: white;
+}
+
+.course-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.course-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: 0.3s;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+}
+
+.filter-container {
+  position: relative;
+}
+
+#filterToggle {
+  padding: 8px 15px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  display: none;
+  flex-direction: column;
+  min-width: 180px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.filter-dropdown button {
+  padding: 10px;
+  border: none;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+}
+
+.filter-dropdown button:hover {
+  background: #f1f5f9;
+}
+
+.filter-dropdown button {
+  color: black;
+  background: white;
+}
+
+.filter-dropdown button:hover {
+  background: #f1f5f9;
+}
+
+.course-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.search-box {
+  width: 60%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.course-card button {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.course-card h3 {
+  margin-bottom: 5px;
+}
+
+.course-card p {
+  color: #64748b;
+}
+
+.signup-text {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.forum-post {
+  cursor: pointer;
+}
+
+.forum-post:hover {
+  background: #f1f5f9;
+}
+
+.badge {
+  background: red;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 50%;
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+nav a {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}

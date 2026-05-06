@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="css/style.css">
+  <title>EduLearn</title>
+</head>
+
+<body>
+
+<nav>
+  <h2>EduLearn</h2>
+  <ul>
+    <li><a href="homepage.html">Home</a></li>
+    <li><a href="courses.html">Courses</a></li>
+    <li><a href="forum.html">Forum</a></li>
+    <li><a href="bookstore.html">Bookstore</a></li>
+    <li><a href="login.html">Login</a></li>
+    <li><a href="signup.html">Sign Up</a></li>
+    <li>
+      <a href="purchases.html">
+        Cart <span id="cartCount" class="badge">0</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<div class="container">
+
+  <section class="course-header">
+    <h1>Explore Courses</h1>
+    <p>Browse and discover courses to enhance your skills</p>
+  </section>
+
+  <section class="course-controls">
+
+    <input type="text" id="searchInput" placeholder="Search courses..." class="search-box">
+
+    <div class="filter-container">
+      <button id="filterToggle">All ⏷</button>
+
+      <div class="filter-dropdown" id="filterMenu" style="display:none;">
+        <button data-category="all">All</button>
+        <button data-category="cs">Computer Science</button>
+        <button data-category="math">Mathematics</button>
+        <button data-category="ai">Artificial Intelligence</button>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="course-list" id="courseList">
+
+    <div class="course-card" data-category="cs">
+      <h3>Web Development</h3>
+      <p>HTML, CSS, JavaScript</p>
+    </div>
+
+    <div class="course-card" data-category="ai">
+      <h3>AI Fundamentals</h3>
+      <p>Introduction to AI</p>
+    </div>
+
+    <div class="course-card" data-category="math">
+      <h3>Calculus</h3>
+      <p>Differentiation & Integration</p>
+    </div>
+
+  </section>
+
+</div>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>

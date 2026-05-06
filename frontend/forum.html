@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+  <h2>EduLearn</h2>
+  <ul>
+    <li><a href="homepage.html">Home</a></li>
+    <li><a href="courses.html">Courses</a></li>
+    <li><a href="forum.html">Forum</a></li>
+    <li><a href="bookstore.html">Bookstore</a></li>
+    <li><a href="login.html">Login</a></li>
+    <li><a href="signup.html">Sign Up</a></li>
+    <li>
+      <a href="purchases.html">
+        Cart <span id="cartCount" class="badge">0</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<div class="container">
+<h2>Forum</h2>
+
+<textarea id="postInput" placeholder="Ask something..."></textarea>
+<input id="authorInput" placeholder="Your name">
+<button onclick="addPost()">Post</button>
+
+<div id="posts"></div>
+
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
