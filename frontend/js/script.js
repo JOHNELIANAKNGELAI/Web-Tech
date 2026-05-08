@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
           msgDiv.style.color = "var(--success-color)";
           msgDiv.innerText = "Login successful! Redirecting...";
           localStorage.setItem("user", JSON.stringify(data.user));
-          setTimeout(() => { window.location.href = "homepage.html"; }, 1000);
+          setTimeout(() => { window.location.href = "index.html"; }, 1000);
         } else {
           msgDiv.style.color = "var(--error-color)";
           msgDiv.innerText = data.message || "Invalid login";
