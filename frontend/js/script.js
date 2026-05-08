@@ -143,70 +143,133 @@ async function openSettingsModal(user) {
   });
 }
 
-// --- AUTH PAGES ---
-document.addEventListener("DOMContentLoaded", function () {
-  const loginForm = document.getElementById("loginForm");
-  if (loginForm) {
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
-      const msgDiv = document.getElementById("loginMessage");
+async function openLoginModal() {
+  if (document.getElementById('authModal')) document.getElementById('authModal').remove();
 
-      try {
-        const response = await fetch(`${API_URL}/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
-        });
-        const data = await response.json();
-        if (data.success) {
-          msgDiv.style.color = "var(--success-color)";
-          msgDiv.innerText = "Login successful! Redirecting...";
-          sessionStorage.setItem("user", JSON.stringify(data.user));
-          setTimeout(() => { window.location.href = "index.html"; }, 1000);
-        } else {
-          msgDiv.style.color = "var(--error-color)";
-          msgDiv.innerText = data.message || "Invalid login";
-        }
-      } catch (err) {
+  const modalHtml = `
+    <div id="authModal" class="modal-overlay">
+      <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+          <h3>Welcome Back</h3>
+          <button class="close-btn" onclick="document.getElementById('authModal').remove()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p style="text-align: center; color: var(--text-light); margin-bottom: 24px;">Sign in to continue learning</p>
+          <form id="modalLoginForm">
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="loginEmail" class="form-control" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-block" style="margin-top: 16px; padding: 12px;">Sign In</button>
+            <div id="loginMessage" style="margin-top: 12px; text-align: center; font-size: 14px; font-weight: 500;"></div>
+          </form>
+          <div style="margin-top: 24px; text-align: center; font-size: 14px; color: var(--text-light);">
+            Don't have an account? <a href="#" onclick="openSignupModal()" style="color: var(--primary-blue); font-weight: 600;">Sign up</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+  document.getElementById("modalLoginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+    const msgDiv = document.getElementById("loginMessage");
+
+    try {
+      const response = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await response.json();
+      if (data.success) {
+        msgDiv.style.color = "var(--success-color)";
+        msgDiv.innerText = "Login successful!";
+        sessionStorage.setItem("user", JSON.stringify(data.user));
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
         msgDiv.style.color = "var(--error-color)";
-        msgDiv.innerText = "Failed to connect to server.";
+        msgDiv.innerText = data.message || "Invalid login";
       }
-    });
-  }
+    } catch (err) {
+      msgDiv.style.color = "var(--error-color)";
+      msgDiv.innerText = "Connection error.";
+    }
+  });
+}
 
-  const signupForm = document.getElementById("signupForm");
-  if (signupForm) {
-    signupForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const name = document.getElementById("signupName").value;
-      const email = document.getElementById("signupEmail").value;
-      const password = document.getElementById("signupPassword").value;
-      const msgDiv = document.getElementById("signupMessage");
+async function openSignupModal() {
+  if (document.getElementById('authModal')) document.getElementById('authModal').remove();
 
-      try {
-        const response = await fetch(`${API_URL}/signup`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password })
-        });
-        const data = await response.json();
-        if (data.success) {
-          msgDiv.style.color = "var(--success-color)";
-          msgDiv.innerText = "Account created! Redirecting to login...";
-          setTimeout(() => { window.location.href = "login.html"; }, 1000);
-        } else {
-          msgDiv.style.color = "var(--error-color)";
-          msgDiv.innerText = data.message || "Error creating account";
-        }
-      } catch (err) {
+  const modalHtml = `
+    <div id="authModal" class="modal-overlay">
+      <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+          <h3>Create Account</h3>
+          <button class="close-btn" onclick="document.getElementById('authModal').remove()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p style="text-align: center; color: var(--text-light); margin-bottom: 24px;">Join our learning community</p>
+          <form id="modalSignupForm">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="signupName" class="form-control" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="signupEmail" class="form-control" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="signupPassword" class="form-control" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-block" style="margin-top: 16px; padding: 12px;">Create Account</button>
+            <div id="signupMessage" style="margin-top: 12px; text-align: center; font-size: 14px; font-weight: 500;"></div>
+          </form>
+          <div style="margin-top: 24px; text-align: center; font-size: 14px; color: var(--text-light);">
+            Already have an account? <a href="#" onclick="openLoginModal()" style="color: var(--primary-blue); font-weight: 600;">Sign in</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+  document.getElementById("modalSignupForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = document.getElementById("signupName").value;
+    const email = document.getElementById("signupEmail").value;
+    const password = document.getElementById("signupPassword").value;
+    const msgDiv = document.getElementById("signupMessage");
+
+    try {
+      const response = await fetch(`${API_URL}/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password })
+      });
+      const data = await response.json();
+      if (data.success) {
+        msgDiv.style.color = "var(--success-color)";
+        msgDiv.innerText = "Account created! You can now login.";
+        setTimeout(() => openLoginModal(), 1500);
+      } else {
         msgDiv.style.color = "var(--error-color)";
-        msgDiv.innerText = "Failed to connect to server.";
+        msgDiv.innerText = data.message || "Error creating account";
       }
-    });
-  }
-});
+    } catch (err) {
+      msgDiv.style.color = "var(--error-color)";
+      msgDiv.innerText = "Connection error.";
+    }
+  });
+}
 
 // --- DYNAMIC PAGE ROUTING ---
 document.addEventListener("DOMContentLoaded", function () {
