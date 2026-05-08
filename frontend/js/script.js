@@ -386,18 +386,22 @@ window.switchModule = function(index) {
   const quizzes = window.currentQuizzes;
   
   if (index === 0) {
-    let vSrc = course.video_url || 'videos/cs_intro.mp4';
-    const lowTitle = course.title.toLowerCase();
-    if (lowTitle.includes('calculus')) vSrc = 'videos/calculus.mp4';
-    else if (lowTitle.includes('physics')) vSrc = 'videos/physics.mp4';
-    else if (lowTitle.includes('history')) vSrc = 'videos/history.mp4';
-    else if (lowTitle.includes('computer') || lowTitle.includes('programming')) vSrc = 'videos/cs_intro.mp4';
+    let vSrc = 'videos/cs_intro.mp4'; // Default fallback
+    if (course && course.title) {
+      const lowTitle = course.title.toLowerCase();
+      if (lowTitle.includes('calculus')) vSrc = 'videos/calculus.mp4';
+      else if (lowTitle.includes('physics')) vSrc = 'videos/physics.mp4';
+      else if (lowTitle.includes('history')) vSrc = 'videos/history.mp4';
+      else if (lowTitle.includes('computer') || lowTitle.includes('programming')) vSrc = 'videos/cs_intro.mp4';
+      else if (course.video_url) vSrc = course.video_url;
+    }
+    console.log("Loading video source:", vSrc);
 
     container.innerHTML = `
       <h2 style="margin-top: 0;">Interactive Video Lesson</h2>
       <div style="width: 100%; background: #0F172A; border-radius: 12px; margin-bottom: 24px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
-        <video controls style="width: 100%; display: block; max-height: 450px;">
-          <source src="${vSrc}" type="video/mp4">
+        <video controls preload="auto" style="width: 100%; display: block; max-height: 450px;">
+          <source src="${vSrc}?v=${new Date().getTime()}" type="video/mp4">
           Your browser does not support HTML5 video.
         </video>
       </div>
