@@ -964,3 +964,43 @@ async function checkout() {
 }
 
 // --- END OF SCRIPT ---
+
+function toggleMobileMenu() {
+  let sidebar = document.getElementById("mobileSidebar");
+  let backdrop = document.getElementById("mobileBackdrop");
+
+  if (!sidebar) {
+    const sidebarHtml = `
+      <div id="mobileBackdrop" class="overlay-backdrop" onclick="toggleMobileMenu()"></div>
+      <div id="mobileSidebar" class="mobile-nav-overlay">
+        <button class="mobile-nav-close" onclick="toggleMobileMenu()">&times;</button>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+          <img src="images/The_Logo_of_the_University_of_Technology_Sarawak.png" alt="Logo" style="height: 32px;">
+          <h2 style="margin: 0; font-size: 20px;">EduLearn</h2>
+        </div>
+        <ul class="mobile-nav-links">
+          <li><a href="index.html">🏠 Home</a></li>
+          <li><a href="courses.html">📚 Courses</a></li>
+          <li><a href="forum.html">💬 Forum</a></li>
+          <li><a href="bookstore.html">🛒 Bookstore</a></li>
+        </ul>
+        <hr style="border: none; border-top: 1px solid var(--border-color); margin: 20px 0;">
+        <div id="mobileAuthLinks"></div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML("beforeend", sidebarHtml);
+    sidebar = document.getElementById("mobileSidebar");
+    backdrop = document.getElementById("mobileBackdrop");
+  }
+
+  const user = getUser();
+  const authContainer = document.getElementById("mobileAuthLinks");
+  if (user) {
+    authContainer.innerHTML = `<button class="btn btn-block" onclick="toggleMobileMenu(); openSettingsModal(JSON.parse(sessionStorage.getItem('user')))">👤 My Profile</button>`;
+  } else {
+    authContainer.innerHTML = `<button class="btn btn-block" onclick="toggleMobileMenu(); openLoginModal()">Login / Sign Up</button>`;
+  }
+
+  sidebar.classList.toggle("active");
+  backdrop.classList.toggle("active");
+}
