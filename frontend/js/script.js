@@ -48,28 +48,25 @@ async function openSettingsModal(user) {
     <div id="settingsModal" class="modal-overlay">
       <div class="modal-content" style="max-width: 500px; max-height: 90vh; overflow-y: auto;">
         <div class="modal-header">
-          <h3>Profile Settings</h3>
+          <h3>Student Profile</h3>
           <button class="close-btn" onclick="document.getElementById('settingsModal').style.display='none'">&times;</button>
         </div>
         <div class="modal-body">
-          <form id="updateProfileForm">
-            <div class="form-group">
-              <label>Full Name</label>
-              <input type="text" id="updateName" class="form-control" value="${user.name}" required>
-            </div>
-            <button type="submit" class="btn btn-block" style="margin-top: 16px;">Save Changes</button>
-            <div id="updateMessage" style="margin-top: 10px; text-align: center; font-size: 14px; font-weight: 500;"></div>
-          </form>
+          <div style="text-align: center; margin-bottom: 24px;">
+            <div class="avatar-circle" style="width: 64px; height: 64px; font-size: 24px; margin: 0 auto 12px;">${user.name.charAt(0).toUpperCase()}</div>
+            <h2 style="margin: 0; font-size: 20px;">${user.name}</h2>
+            <p style="color: var(--text-light); margin: 4px 0 0;">${user.email}</p>
+          </div>
           
           <hr style="margin: 24px 0; border: none; border-top: 1px solid var(--border-color);">
           
-          <h3 style="margin-bottom: 16px; color: var(--primary-blue);">🎓 My Grades</h3>
+          <h3 style="margin-bottom: 16px; color: var(--primary-blue);">🎓 Academic Progress</h3>
           <div id="myGradesList" style="margin-bottom: 24px;">
             <p style="color: var(--text-light); text-align: center;">Loading grades...</p>
           </div>
 
           <hr style="margin: 24px 0; border: none; border-top: 1px solid var(--border-color);">
-          <button id="logoutBtn" class="btn btn-outline btn-block" style="color: var(--error-color); border-color: var(--error-color); justify-content: center; width: 100%;">Log Out</button>
+          <button id="logoutBtn" class="btn btn-outline btn-block" style="color: var(--error-color); border-color: var(--error-color); justify-content: center; width: 100%;">Log Out Account</button>
         </div>
       </div>
     </div>
@@ -110,37 +107,10 @@ async function openSettingsModal(user) {
 
   document.getElementById("logoutBtn").addEventListener("click", () => {
     sessionStorage.removeItem("user");
-    localStorage.removeItem("cart"); // clear cart on logout
+    localStorage.removeItem("cart");
     window.location.reload();
   });
-
-  document.getElementById("updateProfileForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const newName = document.getElementById("updateName").value;
-    const msgDiv = document.getElementById("updateMessage");
-    
-    try {
-      const response = await fetch(`${API_URL}/update_profile`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: user.email, name: newName })
-      });
-      const data = await response.json();
-      if (data.success) {
-        msgDiv.style.color = "var(--success-color)";
-        msgDiv.innerText = "Profile updated! Reloading...";
-        user.name = newName;
-        sessionStorage.setItem("user", JSON.stringify(user));
-        setTimeout(() => window.location.reload(), 1000);
-      } else {
-        msgDiv.style.color = "var(--error-color)";
-        msgDiv.innerText = data.message || "Error updating profile.";
-      }
-    } catch (err) {
-      msgDiv.style.color = "var(--error-color)";
-      msgDiv.innerText = "Failed to connect to server.";
-    }
-  });
+}
 }
 
 async function openLoginModal() {
