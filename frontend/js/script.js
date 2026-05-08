@@ -142,26 +142,8 @@ async function openSettingsModal(user) {
   });
 }
 
-// --- STATS ---
-async function loadStats() {
-  const studentEl = document.getElementById('statStudents');
-  const courseEl = document.getElementById('statCourses');
-  if (!studentEl || !courseEl) return;
-
-  try {
-    const response = await fetch(`${API_URL}/stats`);
-    const data = await response.json();
-    studentEl.innerText = data.students.toLocaleString() + "+";
-    courseEl.innerText = data.courses.toLocaleString() + "+";
-  } catch (err) {
-    studentEl.innerText = "10k+";
-    courseEl.innerText = "500+";
-  }
-}
-
 // --- AUTH PAGES ---
 document.addEventListener("DOMContentLoaded", function () {
-  loadStats();
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
