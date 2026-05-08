@@ -56,10 +56,6 @@ async function openSettingsModal(user) {
               <label>Full Name</label>
               <input type="text" id="updateName" class="form-control" value="${user.name}" required>
             </div>
-            <div class="form-group">
-              <label>New Password (leave blank to keep current)</label>
-              <input type="password" id="updatePassword" class="form-control" placeholder="••••••••">
-            </div>
             <button type="submit" class="btn btn-block" style="margin-top: 16px;">Save Changes</button>
             <div id="updateMessage" style="margin-top: 10px; text-align: center; font-size: 14px; font-weight: 500;"></div>
           </form>
@@ -120,14 +116,13 @@ async function openSettingsModal(user) {
   document.getElementById("updateProfileForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const newName = document.getElementById("updateName").value;
-    const newPassword = document.getElementById("updatePassword").value;
     const msgDiv = document.getElementById("updateMessage");
     
     try {
       const response = await fetch(`${API_URL}/update_profile`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: user.email, name: newName, password: newPassword })
+        body: JSON.stringify({ email: user.email, name: newName })
       });
       const data = await response.json();
       if (data.success) {

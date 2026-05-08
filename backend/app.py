@@ -1,25 +1,53 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import sqlite3
+import psycopg2
+from psycopg2.extras import RealDictCursor
 import os
 import json
 
 app = Flask(__name__)
 CORS(app)
 
+DATABASE_URL = os.environ.get('DATABASE_URL')
 db_path = os.path.join(os.path.dirname(__file__), '..', 'database', 'edulearn.db')
 
-# Auto-initialize database on startup if missing (for Render)
-if not os.path.exists(db_path):
-    print("Database missing. Running setup_db.py...")
-    import subprocess
-    setup_script = os.path.join(os.path.dirname(__file__), '..', 'database', 'setup_db.py')
-    subprocess.run(['python', setup_script])
-
 def get_db_connection():
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
-    return conn
+    if DATABASE_URL:
+        # Use PostgreSQL (Supabase/Neon)
+        conn = psycopg2.connect(DATABASE_URL)
+        return conn
+    else:
+        # Fallback to local SQLite
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        return conn
+
+def execute_query(conn, query, params=()):
+    # Convert ? to %s if using PostgreSQL
+    if DATABASE_URL:
+        query = query.replace('?', '%s')
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+        cur.execute(query, params)
+        if query.strip().upper().startswith('SELECT'):
+            return cur.fetchall()
+        conn.commit()
+        return cur
+    else:
+        res = conn.execute(query, params)
+        if query.strip().upper().startswith('SELECT'):
+            return res.fetchall()
+        conn.commit()
+        return res
+
+def fetch_one(conn, query, params=()):
+    if DATABASE_URL:
+        query = query.replace('?', '%s')
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+        cur.execute(query, params)
+        return cur.fetchone()
+    else:
+        return conn.execute(query, params).fetchone()
 
 # --------- AUTH ---------
 @app.route('/api/login', methods=['POST'])
@@ -30,7 +58,7 @@ def login():
     if not email or not password:
         return jsonify({"success": False, "message": "Email and password required"}), 400
     conn = get_db_connection()
-    user = conn.execute('SELECT * FROM users WHERE email = ? AND password = ?', (email, password)).fetchone()
+    user = fetch_one(conn, 'SELECT * FROM users WHERE email = ? AND password = ?', (email, password))
     conn.close()
     if user:
         return jsonify({"success": True, "user": {"id": user['id'], "name": user['name'], "email": user['email']}})
@@ -46,10 +74,9 @@ def signup():
         return jsonify({"success": False, "message": "All fields required"}), 400
     conn = get_db_connection()
     try:
-        conn.execute('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', (name, email, password))
-        conn.commit()
+        execute_query(conn, 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)', (name, email, password))
         success = True
-    except sqlite3.IntegrityError:
+    except Exception as e:
         success = False
     finally:
         conn.close()
@@ -64,12 +91,11 @@ def update_profile():
     conn = get_db_connection()
     try:
         if password:
-            conn.execute('UPDATE users SET name = ?, password = ? WHERE email = ?', (name, password, email))
+            execute_query(conn, 'UPDATE users SET name = ?, password = ? WHERE email = ?', (name, password, email))
         else:
-            conn.execute('UPDATE users SET name = ? WHERE email = ?', (name, email))
-        conn.commit()
+            execute_query(conn, 'UPDATE users SET name = ? WHERE email = ?', (name, email))
         success = True
-    except:
+    except Exception as e:
         success = False
     finally:
         conn.close()
@@ -121,7 +147,7 @@ def submit_quiz():
         return jsonify({"success": False, "message": "Missing fields"}), 400
         
     conn = get_db_connection()
-    quizzes = conn.execute('SELECT id, answer FROM quizzes WHERE course_id = ?', (course_id,)).fetchall()
+    quizzes = execute_query(conn, 'SELECT id, answer FROM quizzes WHERE course_id = ?', (course_id,))
     
     score = 0
     total = len(quizzes)
@@ -138,15 +164,14 @@ def submit_quiz():
             
     grade = (score / total) * 100
     
-    conn.execute('''
+    execute_query(conn, '''
         INSERT INTO grades (user_id, course_id, score, total, grade)
         VALUES (?, ?, ?, ?, ?)
     ''', (user_id, course_id, score, total, grade))
     
     # Increment student count for this course
-    conn.execute('UPDATE courses SET students = students + 1 WHERE id = ?', (course_id,))
+    execute_query(conn, 'UPDATE courses SET students = students + 1 WHERE id = ?', (course_id,))
     
-    conn.commit()
     conn.close()
     
     return jsonify({
@@ -159,13 +184,13 @@ def submit_quiz():
 @app.route('/api/grades/<int:user_id>', methods=['GET'])
 def get_grades(user_id):
     conn = get_db_connection()
-    grades = conn.execute('''
+    grades = execute_query(conn, '''
         SELECT g.*, c.title as course_title 
         FROM grades g
         JOIN courses c ON g.course_id = c.id
         WHERE g.user_id = ?
         ORDER BY g.timestamp DESC
-    ''', (user_id,)).fetchall()
+    ''', (user_id,))
     conn.close()
     return jsonify([dict(g) for g in grades])
 
@@ -173,12 +198,12 @@ def get_grades(user_id):
 @app.route('/api/forum', methods=['GET'])
 def get_forum_posts():
     conn = get_db_connection()
-    posts = conn.execute('''
+    posts = execute_query(conn, '''
         SELECT p.*, u.name as author 
         FROM forum_posts p 
         JOIN users u ON p.user_id = u.id 
         ORDER BY p.timestamp DESC
-    ''').fetchall()
+    ''')
     conn.close()
     return jsonify([dict(p) for p in posts])
 
@@ -191,18 +216,18 @@ def create_forum_post():
     if not user_id or not title or not content:
         return jsonify({"success": False, "message": "Missing fields"}), 400
     conn = get_db_connection()
-    conn.execute('INSERT INTO forum_posts (user_id, title, content) VALUES (?, ?, ?)', (user_id, title, content))
-    conn.commit()
+    execute_query(conn, 'INSERT INTO forum_posts (user_id, title, content) VALUES (?, ?, ?)', (user_id, title, content))
     conn.close()
     return jsonify({"success": True})
 
 @app.route('/api/forum/<int:post_id>', methods=['GET'])
 def get_forum_post(post_id):
     conn = get_db_connection()
-    post = conn.execute('SELECT p.*, u.name as author FROM forum_posts p JOIN users u ON p.user_id = u.id WHERE p.id = ?', (post_id,)).fetchone()
+    post = fetch_one(conn, 'SELECT p.*, u.name as author FROM forum_posts p JOIN users u ON p.user_id = u.id WHERE p.id = ?', (post_id,))
     if not post:
+        conn.close()
         return jsonify({"success": False, "message": "Post not found"}), 404
-    replies = conn.execute('SELECT r.*, u.name as author FROM forum_replies r JOIN users u ON r.user_id = u.id WHERE r.post_id = ? ORDER BY r.timestamp ASC', (post_id,)).fetchall()
+    replies = execute_query(conn, 'SELECT r.*, u.name as author FROM forum_replies r JOIN users u ON r.user_id = u.id WHERE r.post_id = ? ORDER BY r.timestamp ASC', (post_id,))
     conn.close()
     post_dict = dict(post)
     post_dict['replies'] = [dict(r) for r in replies]
@@ -216,8 +241,7 @@ def add_forum_reply(post_id):
     if not user_id or not content:
         return jsonify({"success": False, "message": "Missing fields"}), 400
     conn = get_db_connection()
-    conn.execute('INSERT INTO forum_replies (post_id, user_id, content) VALUES (?, ?, ?)', (post_id, user_id, content))
-    conn.commit()
+    execute_query(conn, 'INSERT INTO forum_replies (post_id, user_id, content) VALUES (?, ?, ?)', (post_id, user_id, content))
     conn.close()
     return jsonify({"success": True})
 
@@ -226,15 +250,15 @@ def add_forum_reply(post_id):
 def get_books():
     user_id = request.args.get('user_id')
     conn = get_db_connection()
-    books = conn.execute('''
+    books = execute_query(conn, '''
         SELECT b.*, u.name as seller_name 
         FROM books b 
         JOIN users u ON b.seller_id = u.id
-    ''').fetchall()
+    ''')
     
     purchased_ids = []
     if user_id:
-        purchases = conn.execute('SELECT book_id FROM purchases WHERE user_id = ?', (user_id,)).fetchall()
+        purchases = execute_query(conn, 'SELECT book_id FROM purchases WHERE user_id = ?', (user_id,))
         purchased_ids = [p['book_id'] for p in purchases]
     
     conn.close()
@@ -252,7 +276,7 @@ def get_books():
 def get_book_content(book_id):
     user_id = request.args.get('user_id')
     conn = get_db_connection()
-    book = conn.execute('SELECT * FROM books WHERE id = ?', (book_id,)).fetchone()
+    book = fetch_one(conn, 'SELECT * FROM books WHERE id = ?', (book_id,))
     
     if not book:
         conn.close()
@@ -263,7 +287,7 @@ def get_book_content(book_id):
         return jsonify({"success": True, "content": book['content']})
         
     if user_id:
-        purchase = conn.execute('SELECT 1 FROM purchases WHERE user_id = ? AND book_id = ?', (user_id, book_id)).fetchone()
+        purchase = fetch_one(conn, 'SELECT 1 FROM purchases WHERE user_id = ? AND book_id = ?', (user_id, book_id))
         if purchase:
             conn.close()
             return jsonify({"success": True, "content": book['content']})
@@ -297,21 +321,20 @@ def make_purchase():
         return jsonify({"success": False, "message": "Missing fields"}), 400
     conn = get_db_connection()
     for book_id in book_ids:
-        conn.execute('INSERT INTO purchases (user_id, book_id) VALUES (?, ?)', (user_id, book_id))
-    conn.commit()
+        execute_query(conn, 'INSERT INTO purchases (user_id, book_id) VALUES (?, ?)', (user_id, book_id))
     conn.close()
     return jsonify({"success": True})
 
 @app.route('/api/purchases/<int:user_id>', methods=['GET'])
 def get_purchases(user_id):
     conn = get_db_connection()
-    purchases = conn.execute('''
+    purchases = execute_query(conn, '''
         SELECT p.timestamp, b.title, b.price, b.image_url, b.id as book_id
         FROM purchases p 
         JOIN books b ON p.book_id = b.id 
         WHERE p.user_id = ? 
         ORDER BY p.timestamp DESC
-    ''', (user_id,)).fetchall()
+    ''', (user_id,))
     conn.close()
     return jsonify([dict(p) for p in purchases])
 
