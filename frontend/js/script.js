@@ -2,7 +2,7 @@
 const API_URL = "https://edu-learn-qwjp.onrender.com/api";
 
 function getUser() {
-  const userStr = localStorage.getItem("user");
+  const userStr = sessionStorage.getItem("user");
   return userStr ? JSON.parse(userStr) : null;
 }
 
@@ -108,7 +108,7 @@ async function openSettingsModal(user) {
   }
 
   document.getElementById("logoutBtn").addEventListener("click", () => {
-    localStorage.removeItem("user");
+    sessionStorage.removeItem("user");
     localStorage.removeItem("cart"); // clear cart on logout
     window.location.reload();
   });
@@ -129,7 +129,7 @@ async function openSettingsModal(user) {
         msgDiv.style.color = "var(--success-color)";
         msgDiv.innerText = "Profile updated! Reloading...";
         user.name = newName;
-        localStorage.setItem("user", JSON.stringify(user));
+        sessionStorage.setItem("user", JSON.stringify(user));
         setTimeout(() => window.location.reload(), 1000);
       } else {
         msgDiv.style.color = "var(--error-color)";
@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (data.success) {
           msgDiv.style.color = "var(--success-color)";
           msgDiv.innerText = "Login successful! Redirecting...";
-          localStorage.setItem("user", JSON.stringify(data.user));
+          sessionStorage.setItem("user", JSON.stringify(data.user));
           setTimeout(() => { window.location.href = "index.html"; }, 1000);
         } else {
           msgDiv.style.color = "var(--error-color)";
