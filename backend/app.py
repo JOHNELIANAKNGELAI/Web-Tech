@@ -9,6 +9,13 @@ CORS(app)
 
 db_path = os.path.join(os.path.dirname(__file__), '..', 'database', 'edulearn.db')
 
+# Auto-initialize database on startup if missing (for Render)
+if not os.path.exists(db_path):
+    print("Database missing. Running setup_db.py...")
+    import subprocess
+    setup_script = os.path.join(os.path.dirname(__file__), '..', 'database', 'setup_db.py')
+    subprocess.run(['python', setup_script])
+
 def get_db_connection():
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row

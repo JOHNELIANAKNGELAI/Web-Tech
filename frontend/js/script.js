@@ -1,5 +1,5 @@
 // --- UTILITIES ---
-const API_URL = "http://127.0.0.1:5000/api";
+const API_URL = "https://edu-learn-qwjp.onrender.com/api";
 
 function getUser() {
   const userStr = localStorage.getItem("user");
