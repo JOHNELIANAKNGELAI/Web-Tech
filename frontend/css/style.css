@@ -1099,3 +1099,51 @@ footer {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Professional Cart Icon */
+.cart-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: #F1F5F9;
+  border-radius: 50%;
+  color: var(--text-dark);
+  transition: all 0.3s ease;
+  margin-right: 15px;
+}
+
+.cart-icon:hover {
+  background: var(--primary-blue);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.cart-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.cart-icon .badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--primary-blue);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 2px solid white;
+}
+
+.cart-icon:hover .badge {
+  background: #10B981;
+}
