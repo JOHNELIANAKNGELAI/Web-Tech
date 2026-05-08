@@ -903,7 +903,7 @@ footer {
 /* Modal Replies */
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0; left: 0; left: 0; bottom: 0;
   background: rgba(15, 23, 42, 0.4);
   display: flex;
   align-items: center;
@@ -1198,14 +1198,14 @@ footer {
 .mobile-nav-overlay {
   position: fixed;
   top: 0;
-  right: -100%;
+  left: -100%;
   width: 80%;
   max-width: 300px;
   height: 100vh;
   background: white;
   z-index: 2000;
-  box-shadow: -10px 0 30px rgba(0,0,0,0.1);
-  transition: right 0.3s ease;
+  box-shadow: 10px 0 30px rgba(0,0,0,0.1);
+  transition: left 0.3s ease;
   padding: 40px 24px;
   display: flex;
   flex-direction: column;
@@ -1213,7 +1213,7 @@ footer {
 }
 
 .mobile-nav-overlay.active {
-  right: 0;
+  left: 0;
 }
 
 .mobile-nav-close {
