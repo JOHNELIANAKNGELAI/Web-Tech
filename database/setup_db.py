@@ -1,144 +1,22 @@
 import sqlite3
 import os
 
-# Check for cloud database URL
-DATABASE_URL = os.environ.get('DATABASE_URL')
 db_path = os.path.join(os.path.dirname(__file__), 'edulearn.db')
 
-if DATABASE_URL:
-    import psycopg2
-    print("Connecting to Cloud PostgreSQL...")
-    conn = psycopg2.connect(DATABASE_URL)
-    placeholder = '%s'
-    auto_inc = 'SERIAL'
-else:
-    print("Connecting to Local SQLite...")
-    conn = sqlite3.connect(db_path)
-    placeholder = '?'
-    auto_inc = 'INTEGER PRIMARY KEY AUTOINCREMENT'
-
+conn = sqlite3.connect(db_path)
 c = conn.cursor()
 
 # Drop existing tables to recreate clean schema
 tables = ['users', 'courses', 'forum_posts', 'forum_replies', 'books', 'purchases', 'quizzes', 'grades']
 for table in tables:
-    c.execute(f'DROP TABLE IF EXISTS {table} CASCADE')
+    c.execute(f'DROP TABLE IF EXISTS {table}')
 
-c.execute(f'''CREATE TABLE users (
-    id {auto_inc if DATABASE_URL else 'INTEGER PRIMARY KEY AUTOINCREMENT'},
+c.execute('''CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL
-    {", PRIMARY KEY (id)" if DATABASE_URL else ""}
 )''')
-
-c.execute(f'''CREATE TABLE courses (
-    id {auto_inc if DATABASE_URL else 'INTEGER PRIMARY KEY AUTOINCREMENT'},
-    title TEXT NOT NULL,
-    instructor TEXT NOT NULL,
-    category TEXT NOT NULL,
-    students INTEGER DEFAULT 0,
-    weeks INTEGER DEFAULT 12,
-    image_icon TEXT DEFAULT '📘',
-    video_url TEXT DEFAULT 'videos/cs_intro.mp4',
-    notes TEXT DEFAULT ''
-    {", PRIMARY KEY (id)" if DATABASE_URL else ""}
-)''')
-
-c.execute(f'''CREATE TABLE quizzes (
-    id {auto_inc if DATABASE_URL else 'INTEGER PRIMARY KEY AUTOINCREMENT'},
-    course_id INTEGER,
-    question TEXT NOT NULL,
-    options TEXT NOT NULL,
-    answer TEXT NOT NULL,
-    {", PRIMARY KEY (id)" if DATABASE_URL else ""}
-    FOREIGN KEY(course_id) REFERENCES courses(id)
-)''')
-
-c.execute(f'''CREATE TABLE grades (
-    id {auto_inc if DATABASE_URL else 'INTEGER PRIMARY KEY AUTOINCREMENT'},
-    user_id INTEGER,
-    course_id INTEGER,
-    score INTEGER,
-    total INTEGER,
-    grade REAL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    {", PRIMARY KEY (id)" if DATABASE_URL else ""}
-    FOREIGN KEY(user_id) REFERENCES users(id),
-    FOREIGN KEY(course_id) REFERENCES courses(id)
-)''')
-
-c.execute(f'''CREATE TABLE forum_posts (
-    id {auto_inc if DATABASE_URL else 'INTEGER PRIMARY KEY AUTOINCREMENT'},
-    user_id INTEGER,
-    title TEXT NOT NULL,
-    content TEXT NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    {", PRIMARY KEY (id)" if DATABASE_URL else ""}
-    FOREIGN KEY(user_id) REFERENCES users(id)
-)''')
-
-c.execute(f'''CREATE TABLE forum_replies (
-    id {auto_inc if DATABASE_URL else 'INTEGER PRIMARY KEY AUTOINCREMENT'},
-    post_id INTEGER,
-    user_id INTEGER,
-    content TEXT NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    {", PRIMARY KEY (id)" if DATABASE_URL else ""}
-    FOREIGN KEY(post_id) REFERENCES forum_posts(id),
-    FOREIGN KEY(user_id) REFERENCES users(id)
-)''')
-
-c.execute(f'''CREATE TABLE books (
-    id {auto_inc if DATABASE_URL else 'INTEGER PRIMARY KEY AUTOINCREMENT'},
-    seller_id INTEGER,
-    title TEXT NOT NULL,
-    price REAL NOT NULL,
-    category TEXT NOT NULL,
-    image_url TEXT,
-    content TEXT,
-    {", PRIMARY KEY (id)" if DATABASE_URL else ""}
-    FOREIGN KEY(seller_id) REFERENCES users(id)
-)''')
-
-c.execute(f'''CREATE TABLE purchases (
-    id {auto_inc if DATABASE_URL else 'INTEGER PRIMARY KEY AUTOINCREMENT'},
-    user_id INTEGER,
-    book_id INTEGER,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    {", PRIMARY KEY (id)" if DATABASE_URL else ""}
-    FOREIGN KEY(user_id) REFERENCES users(id),
-    FOREIGN KEY(book_id) REFERENCES books(id)
-)''')
-
-conn.commit()
-
-# Insert dummy data (using placeholders)
-c.execute(f"INSERT INTO users (name, email, password) VALUES ({placeholder}, {placeholder}, {placeholder}) RETURNING id" if DATABASE_URL else "INSERT INTO users (name, email, password) VALUES (?, ?, ?)", ('Admin User', 'admin@edulearn.com', '123456'))
-admin_id = c.fetchone()[0] if DATABASE_URL else c.lastrowid
-
-c.execute(f"INSERT INTO users (name, email, password) VALUES ({placeholder}, {placeholder}, {placeholder}) RETURNING id" if DATABASE_URL else "INSERT INTO users (name, email, password) VALUES (?, ?, ?)", ('Student One', 'student@edulearn.com', '123456'))
-student_id = c.fetchone()[0] if DATABASE_URL else c.lastrowid
-
-# Notes data... (omitted for brevity in this replace_file_content call, keeping original)
-cs_notes = """...""" # I will keep the actual content from the file
-
-courses = [
-    ('Introduction to Computer Science', 'Dr. Sarah Johnson', 'Computer Science', 0, 12, '💻', 'videos/cs_intro.mp4', 'CS Notes...'),
-    ('Advanced Calculus', 'Prof. Michael Chen', 'Mathematics', 0, 14, '📐', 'videos/calculus.mp4', 'Calc Notes...'),
-    ('World History', 'Dr. Emily Brown', 'History', 0, 10, '🌍', 'videos/history.mp4', 'Hist Notes...'),
-    ('Web Development Bootcamp', 'John Doe', 'Computer Science', 0, 8, '🌐', 'videos/cs_intro.mp4', 'Web Notes...')
-]
-
-for course in courses:
-    c.execute(f"INSERT INTO courses (title, instructor, category, students, weeks, image_icon, video_url, notes) VALUES ({placeholder}, {placeholder}, {placeholder}, {placeholder}, {placeholder}, {placeholder}, {placeholder}, {placeholder})", course)
-
-# Add remaining dummy data (Quizzes, Books, Forum) similarly...
-# For the sake of this tool call, I'll just write the full robust version.
-
-conn.commit()
-print("Database initialized successfully.")
-conn.close()
 
 c.execute('''CREATE TABLE courses (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
