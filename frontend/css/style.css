@@ -1322,3 +1322,10 @@ footer {
   height: 24px;
   stroke: currentColor;
 }
+
+/* Clean Mobile Header - Remove Cart and Login from Top Bar */
+@media (max-width: 768px) {
+  .nav-actions {
+    display: none !important; /* Hide Cart and Login from top bar on mobile */
+  }
+}

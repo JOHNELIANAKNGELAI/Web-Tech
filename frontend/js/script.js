@@ -955,7 +955,8 @@ function toggleMobileMenu() {
           <li><a href="index.html">🏠 Home</a></li>
           <li><a href="courses.html">📚 Courses</a></li>
           <li><a href="forum.html">💬 Forum</a></li>
-          <li><a href="bookstore.html">🛒 Bookstore</a></li>
+          <li><a href="bookstore.html">🏪 Bookstore</a></li>
+          <li><a href="purchases.html">🛒 Shopping Cart</a></li>
         </ul>
         <hr style="border: none; border-top: 1px solid var(--border-color); margin: 20px 0;">
         <div id="mobileAuthLinks"></div>
@@ -969,9 +970,15 @@ function toggleMobileMenu() {
   const user = getUser();
   const authContainer = document.getElementById("mobileAuthLinks");
   if (user) {
-    authContainer.innerHTML = `<button class="btn btn-block" onclick="toggleMobileMenu(); openSettingsModal(JSON.parse(sessionStorage.getItem('user')))">👤 My Profile</button>`;
+    authContainer.innerHTML = `
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <button class="btn btn-block" onclick="toggleMobileMenu(); openSettingsModal(JSON.parse(sessionStorage.getItem('user')))">👤 My Profile & Grades</button>
+      </div>
+    `;
   } else {
-    authContainer.innerHTML = `<button class="btn btn-block" onclick="toggleMobileMenu(); openLoginModal()">Login / Sign Up</button>`;
+    authContainer.innerHTML = `
+      <button class="btn btn-block" onclick="toggleMobileMenu(); openLoginModal()">Sign In / Create Account</button>
+    `;
   }
 
   sidebar.classList.toggle("active");
