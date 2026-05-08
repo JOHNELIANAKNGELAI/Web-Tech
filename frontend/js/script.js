@@ -514,11 +514,15 @@ async function loadForum() {
   
   // Create New Post UI
   const newPostHtml = `
-    <div class="card" style="margin-bottom: 24px;">
-      <h3>Create New Discussion</h3>
-      <input type="text" id="postTitle" class="form-control" placeholder="Discussion Title" style="margin-bottom: 12px;">
-      <textarea id="postContent" class="form-control" placeholder="What's on your mind?" style="margin-bottom: 12px; height: 100px; resize: vertical;"></textarea>
-      <button class="btn" onclick="submitForumPost()">Post Discussion</button>
+    <div class="card" style="margin-bottom: 32px; padding: 24px;">
+      <h3 style="margin-bottom: 20px;">Create New Discussion</h3>
+      <div class="form-group">
+        <input type="text" id="postTitle" class="form-control" placeholder="Discussion Title">
+      </div>
+      <div class="form-group">
+        <textarea id="postContent" class="form-control" placeholder="What's on your mind?" style="height: 120px; resize: vertical;"></textarea>
+      </div>
+      <button class="btn" style="padding: 12px 24px;" onclick="submitForumPost()">Post Discussion</button>
     </div>
   `;
   container.insertAdjacentHTML('beforebegin', newPostHtml);
