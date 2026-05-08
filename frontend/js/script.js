@@ -13,6 +13,16 @@ function updateCartCount() {
   if (badge) badge.innerText = cart.length;
 }
 
+function ensureLogin(message = "Please sign in to access this feature.") {
+  const user = getUser();
+  if (!user) {
+    alert(message);
+    openLoginModal();
+    return false;
+  }
+  return true;
+}
+
 document.addEventListener("DOMContentLoaded", updateCartCount);
 
 // --- GLOBAL PROFILE HANDLER ---
@@ -315,11 +325,7 @@ async function loadCourses() {
 }
 
 function openCourse(id, title, instructor) {
-  const user = getUser();
-  if(!user) {
-    alert("Please log in to access course materials.");
-    return window.location.href = "login.html";
-  }
+  if (!ensureLogin("Please log in to access course materials.")) return;
   localStorage.setItem("currentCourse", JSON.stringify({ id, title, instructor }));
   window.location.href = "course_content.html";
 }
@@ -531,11 +537,8 @@ async function loadForum() {
 }
 
 async function submitForumPost() {
+  if (!ensureLogin("Please log in to post a new discussion.")) return;
   const user = getUser();
-  if (!user) {
-    alert("Please log in to post.");
-    return window.location.href = "login.html";
-  }
   
   const title = document.getElementById("postTitle").value;
   const content = document.getElementById("postContent").value;
@@ -552,6 +555,7 @@ async function submitForumPost() {
 }
 
 function viewPost(id) {
+  if (!ensureLogin("Please log in to view and reply to discussions.")) return;
   localStorage.setItem("currentPostId", id);
   window.location.href = "replies.html";
 }
@@ -714,6 +718,7 @@ async function loadBooks() {
 }
 
 function addToCart(id, title, price, image_url) {
+  if (!ensureLogin("Please sign in to buy books and manage your cart.")) return;
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   cart.push({ id, title, price, image_url });
   localStorage.setItem("cart", JSON.stringify(cart));
@@ -722,6 +727,7 @@ function addToCart(id, title, price, image_url) {
 }
 
 async function readBook(bookId) {
+  if (!ensureLogin("Please log in to read this book.")) return;
   const user = getUser();
   const userIdParam = user ? `?user_id=${user.id}` : '';
   try {
@@ -753,6 +759,7 @@ async function readBook(bookId) {
 }
 
 function openSellModal() {
+  if (!ensureLogin("Please log in to list your books for sale.")) return;
   if (document.getElementById('sellModal')) {
     document.getElementById('sellModal').style.display = 'flex';
     return;
