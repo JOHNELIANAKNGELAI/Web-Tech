@@ -1260,3 +1260,65 @@ footer {
 .overlay-backdrop.active {
   display: block;
 }
+
+/* Slim Mobile Header Fix */
+@media (max-width: 768px) {
+  nav {
+    padding: 8px 16px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    height: 60px !important;
+  }
+
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-container {
+    gap: 6px !important;
+  }
+
+  .logo-container h2 {
+    font-size: 18px !important;
+    margin: 0 !important;
+  }
+
+  .logo-img {
+    height: 28px !important;
+  }
+
+  .nav-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    margin: 0 !important;
+  }
+
+  .mobile-menu-btn {
+    display: flex !important;
+    order: -1; /* Ensure it stays on the far left */
+    padding: 4px !important;
+    margin-right: 4px;
+  }
+
+  .cart-icon {
+    width: 32px !important;
+    height: 32px !important;
+    margin: 0 !important;
+  }
+
+  .nav-actions .btn {
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+  }
+}
+
+.mobile-menu-btn svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+}
