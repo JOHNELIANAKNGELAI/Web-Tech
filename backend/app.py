@@ -21,6 +21,17 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+@app.route('/api/stats', methods=['GET'])
+def get_stats():
+    conn = get_db_connection()
+    user_count = conn.execute('SELECT COUNT(*) FROM users').fetchone()[0]
+    course_count = conn.execute('SELECT COUNT(*) FROM courses').fetchone()[0]
+    conn.close()
+    return jsonify({
+        "students": user_count,
+        "courses": course_count
+    })
+
 # --------- AUTH ---------
 @app.route('/api/login', methods=['POST'])
 def login():
