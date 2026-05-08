@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
       loginBtn.href = "#";
       loginBtn.className = "profile-btn";
       loginBtn.title = "Profile Settings";
-      
+      loginBtn.removeAttribute("onclick");
       loginBtn.addEventListener("click", (e) => {
         e.preventDefault();
         openSettingsModal(user);
