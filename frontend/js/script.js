@@ -142,8 +142,47 @@ async function openSettingsModal(user) {
   });
 }
 
+// --- POPULAR COURSES ---
+async function loadPopularCourses() {
+  const container = document.getElementById("popularCoursesGrid");
+  if (!container) return;
+
+  try {
+    const response = await fetch(`${API_URL}/courses`);
+    const courses = await response.json();
+    
+    // Sort by student count and take top 3
+    const popular = courses.sort((a, b) => b.students - a.students).slice(0, 3);
+    
+    if (popular.length === 0) {
+      container.innerHTML = '<p style="text-align: center; grid-column: span 3;">No courses available yet.</p>';
+      return;
+    }
+
+    container.innerHTML = popular.map(c => `
+      <div class="card" onclick="window.location.href='course-details.html?id=${c.id}'" style="cursor: pointer;">
+        <div class="course-image">${c.image_icon || '📘'}</div>
+        <div class="course-content">
+          <div class="course-tags">
+            <span class="tag">${c.category}</span>
+          </div>
+          <h3>${c.title}</h3>
+          <p>${c.instructor}</p>
+          <div class="course-meta">
+            <span>👥 ${c.students} students</span>
+            <span>⏱ ${c.weeks} weeks</span>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    container.innerHTML = '<p style="text-align: center; grid-column: span 3; color: var(--error-color);">Failed to load courses.</p>';
+  }
+}
+
 // --- AUTH PAGES ---
 document.addEventListener("DOMContentLoaded", function () {
+  loadPopularCourses();
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
