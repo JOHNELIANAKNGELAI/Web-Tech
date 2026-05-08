@@ -1,4 +1,5 @@
 // --- UTILITIES ---
+if (localStorage.getItem("user")) localStorage.removeItem("user"); // Cleanup old persistent sessions
 const API_URL = "https://edu-learn-qwjp.onrender.com/api";
 
 function getUser() {
