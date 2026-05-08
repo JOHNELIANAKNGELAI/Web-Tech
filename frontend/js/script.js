@@ -68,6 +68,13 @@ async function openSettingsModal(user) {
           </div>
 
           <hr style="margin: 24px 0; border: none; border-top: 1px solid var(--border-color);">
+          
+          <h3 style="margin-bottom: 16px; color: var(--primary-blue);">⭐ Saved Resources</h3>
+          <div id="mySavedCourses" style="margin-bottom: 24px;">
+            <p style="color: var(--text-light); text-align: center;">Loading saved courses...</p>
+          </div>
+
+          <hr style="margin: 24px 0; border: none; border-top: 1px solid var(--border-color);">
           <button id="logoutBtn" class="btn btn-outline btn-block" style="color: var(--error-color); border-color: var(--error-color); justify-content: center; width: 100%;">Log Out</button>
         </div>
       </div>
@@ -104,8 +111,36 @@ async function openSettingsModal(user) {
       gradesContainer.innerHTML = gradesHtml;
     }
   } catch (err) {
-    document.getElementById("myGradesList").innerHTML = '<p style="color: var(--error-color); text-align: center; font-size: 14px;">Failed to load grades.</p>';
+    if (document.getElementById("myGradesList")) {
+      document.getElementById("myGradesList").innerHTML = '<p style="color: var(--error-color); text-align: center; font-size: 14px;">Failed to load grades.</p>';
+    }
   }
+
+  // Fetch Saved Courses
+  try {
+    const response = await fetch(`${API_URL}/saved_courses?user_id=${user.id}`);
+    const saved = await response.json();
+    const savedContainer = document.getElementById("mySavedCourses");
+    
+    if (saved.length === 0) {
+      savedContainer.innerHTML = '<p style="color: var(--text-light); text-align: center; font-size: 14px;">No saved resources yet.</p>';
+    } else {
+      let savedHtml = '<div style="display: flex; flex-direction: column; gap: 12px;">';
+      saved.forEach(s => {
+        savedHtml += `
+          <div style="background: #F8FAFC; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+            <div style="cursor: pointer;" onclick="openCourse(${s.id}, '${s.title.replace(/'/g, "\\'")}', '${s.instructor.replace(/'/g, "\\'")}')">
+              <strong style="display: block; font-size: 14px; color: var(--text-dark);">${s.title}</strong>
+              <span style="font-size: 12px; color: var(--text-light);">${s.instructor}</span>
+            </div>
+            <button onclick="unsaveCourse(${s.id})" style="background: none; border: none; cursor: pointer; color: var(--error-color);">✕</button>
+          </div>
+        `;
+      });
+      savedHtml += '</div>';
+      savedContainer.innerHTML = savedHtml;
+    }
+  } catch (err) {}
 
   document.getElementById("logoutBtn").addEventListener("click", () => {
     localStorage.removeItem("user");
@@ -232,6 +267,14 @@ async function loadCourses() {
   if (!container) return;
   
   try {
+    const user = getUser();
+    let savedIds = [];
+    if (user) {
+      const savedRes = await fetch(`${API_URL}/saved_courses?user_id=${user.id}`);
+      const saved = await savedRes.json();
+      savedIds = saved.map(s => s.id);
+    }
+
     const response = await fetch(`${API_URL}/courses?_t=` + new Date().getTime());
     const courses = await response.json();
     
@@ -250,18 +293,27 @@ async function loadCourses() {
       
       container.innerHTML = "";
       filtered.forEach(c => {
+        const isSaved = savedIds.includes(c.id);
+        const saveIcon = isSaved ? "⭐" : "☆";
+        const saveAction = isSaved ? `unsaveCourse(${c.id})` : `saveCourse(${c.id})`;
+
         container.innerHTML += `
-          <div class="card course-card" data-category="${c.category}" style="cursor: pointer;" onclick="openCourse(${c.id}, '${c.title.replace(/'/g, "\\'")}', '${c.instructor.replace(/'/g, "\\'")}')">
-            <div class="course-image">${c.image_icon}</div>
-            <div class="course-content">
-              <div class="course-tags">
-                <span class="tag">${c.category}</span>
-              </div>
-              <h3>${c.title}</h3>
-              <p>${c.instructor}</p>
-              <div class="course-meta">
-                <span>👥 ${c.students} students</span>
-                <span>⏱ ${c.weeks} weeks</span>
+          <div class="card course-card" data-category="${c.category}" style="position: relative;">
+            <button onclick="${saveAction}" style="position: absolute; top: 12px; right: 12px; background: white; border: 1px solid var(--border-color); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; font-size: 18px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); color: ${isSaved ? '#F59E0B' : '#64748B'};">
+              ${saveIcon}
+            </button>
+            <div onclick="openCourse(${c.id}, '${c.title.replace(/'/g, "\\'")}', '${c.instructor.replace(/'/g, "\\'")}')" style="cursor: pointer;">
+              <div class="course-image">${c.image_icon}</div>
+              <div class="course-content">
+                <div class="course-tags">
+                  <span class="tag">${c.category}</span>
+                </div>
+                <h3>${c.title}</h3>
+                <p>${c.instructor}</p>
+                <div class="course-meta">
+                  <span>👥 ${c.students} students</span>
+                  <span>⏱ ${c.weeks} weeks</span>
+                </div>
               </div>
             </div>
           </div>
@@ -279,6 +331,27 @@ async function loadCourses() {
   } catch (e) {
     console.error("Failed to load courses");
   }
+}
+
+async function saveCourse(courseId) {
+  const user = getUser();
+  if (!user) return alert("Please log in to save courses.");
+  await fetch(`${API_URL}/save_course`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: user.id, course_id: courseId })
+  });
+  loadCourses();
+}
+
+async function unsaveCourse(courseId) {
+  const user = getUser();
+  await fetch(`${API_URL}/unsave_course`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: user.id, course_id: courseId })
+  });
+  loadCourses();
 }
 
 function openCourse(id, title, instructor) {
@@ -528,7 +601,16 @@ async function loadReplies() {
 
     const container = document.querySelector(".reply-list") || createReplyContainer();
     
-    container.innerHTML = `<div class="card" style="background: #EFF6FF; border: 1px solid #BFDBFE; margin-bottom: 24px;"><strong>Original Post:</strong><br><br>${post.content}</div>`;
+    const user = getUser();
+    const isAuthor = user && user.id === post.user_id;
+    const deleteBtn = isAuthor ? `<button class="btn btn-outline" style="color: var(--error-color); border-color: var(--error-color); margin-top: 16px; padding: 6px 12px; font-size: 12px;" onclick="deletePost(${post.id})">🗑 Delete Discussion</button>` : '';
+
+    container.innerHTML = `
+      <div class="card" style="background: #EFF6FF; border: 1px solid #BFDBFE; margin-bottom: 24px; position: relative;">
+        <strong>Original Post:</strong><br><br>${post.content}
+        <br>${deleteBtn}
+      </div>
+    `;
     
     post.replies.forEach(r => {
       container.innerHTML += `
@@ -553,9 +635,13 @@ async function loadReplies() {
       </div>
     `;
     
-  } catch (e) {
-    console.error("Failed to load replies");
-  }
+}
+
+async function deletePost(id) {
+  if (!confirm("Are you sure you want to delete this discussion?")) return;
+  const user = getUser();
+  await fetch(`${API_URL}/forum/${id}?user_id=${user.id}`, { method: "DELETE" });
+  window.location.href = "forum.html";
 }
 
 function createReplyContainer() {

@@ -90,6 +90,16 @@ c.execute('''CREATE TABLE purchases (
     FOREIGN KEY(book_id) REFERENCES books(id)
 )''')
 
+c.execute('''CREATE TABLE saved_courses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    course_id INTEGER,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id),
+    FOREIGN KEY(course_id) REFERENCES courses(id),
+    UNIQUE(user_id, course_id)
+)''')
+
 # Insert dummy data
 c.execute("INSERT INTO users (name, email, password) VALUES ('Admin User', 'admin@edulearn.com', '123456')")
 admin_id = c.lastrowid

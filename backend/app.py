@@ -232,6 +232,67 @@ def add_forum_reply(post_id):
     conn.close()
     return jsonify({"success": True})
 
+@app.route('/api/forum/<int:post_id>', methods=['DELETE'])
+def delete_forum_post(post_id):
+    user_id = request.args.get('user_id')
+    if not user_id:
+        return jsonify({"success": False, "message": "Unauthorized"}), 401
+    conn = get_db_connection()
+    # Check if author
+    post = conn.execute('SELECT user_id FROM forum_posts WHERE id = ?', (post_id,)).fetchone()
+    if not post or str(post['user_id']) != str(user_id):
+        conn.close()
+        return jsonify({"success": False, "message": "Unauthorized or not found"}), 401
+    
+    conn.execute('DELETE FROM forum_replies WHERE post_id = ?', (post_id,))
+    conn.execute('DELETE FROM forum_posts WHERE id = ?', (post_id,))
+    conn.commit()
+    conn.close()
+    return jsonify({"success": True})
+
+# --------- SAVED RESOURCES ---------
+@app.route('/api/saved_courses', methods=['GET'])
+def get_saved_courses():
+    user_id = request.args.get('user_id')
+    if not user_id:
+        return jsonify([])
+    conn = get_db_connection()
+    courses = conn.execute('''
+        SELECT c.* 
+        FROM courses c
+        JOIN saved_courses s ON c.id = s.course_id
+        WHERE s.user_id = ?
+    ''', (user_id,)).fetchall()
+    conn.close()
+    return jsonify([dict(c) for c in courses])
+
+@app.route('/api/save_course', methods=['POST'])
+def save_course():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    course_id = data.get('course_id')
+    if not user_id or not course_id:
+        return jsonify({"success": False}), 400
+    conn = get_db_connection()
+    try:
+        conn.execute('INSERT INTO saved_courses (user_id, course_id) VALUES (?, ?)', (user_id, course_id))
+        conn.commit()
+    except:
+        pass
+    conn.close()
+    return jsonify({"success": True})
+
+@app.route('/api/unsave_course', methods=['POST'])
+def unsave_course():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    course_id = data.get('course_id')
+    conn = get_db_connection()
+    conn.execute('DELETE FROM saved_courses WHERE user_id = ? AND course_id = ?', (user_id, course_id))
+    conn.commit()
+    conn.close()
+    return jsonify({"success": True})
+
 # --------- BOOKSTORE & MARKETPLACE ---------
 @app.route('/api/books', methods=['GET'])
 def get_books():
