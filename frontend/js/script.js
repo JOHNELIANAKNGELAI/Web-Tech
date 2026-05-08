@@ -111,7 +111,6 @@ async function openSettingsModal(user) {
     window.location.reload();
   });
 }
-}
 
 async function openLoginModal() {
   if (document.getElementById('authModal')) document.getElementById('authModal').remove();
