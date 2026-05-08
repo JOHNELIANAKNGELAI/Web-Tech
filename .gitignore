@@ -3,3 +3,7 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.log
+*.mp4
+*.db
+frontend/videos/
+database/*.db

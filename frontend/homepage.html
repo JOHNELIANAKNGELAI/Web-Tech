@@ -1,77 +1,212 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/style.css">
-  <title>EduLearn</title>
+  <title>EduLearn | Home</title>
 </head>
-
 <body>
 
 <nav>
-  <h2>EduLearn</h2>
+  <div class="logo-container">
+    <img src="images/The_Logo_of_the_University_of_Technology_Sarawak.png" alt="UTS Logo" class="logo-img">
+    <h2>EduLearn</h2>
+  </div>
   <ul>
-    <li><a href="homepage.html">Home</a></li>
+    <li><a href="homepage.html" class="active">Home</a></li>
     <li><a href="courses.html">Courses</a></li>
     <li><a href="forum.html">Forum</a></li>
     <li><a href="bookstore.html">Bookstore</a></li>
-    <li><a href="login.html">Login</a></li>
-    <li><a href="signup.html">Sign Up</a></li>
-    <li>
-      <a href="purchases.html">
-        Cart <span id="cartCount" class="badge">0</span>
-      </a>
-    </li>
   </ul>
+  <div class="nav-actions">
+    <a href="purchases.html" class="cart-icon">
+      Cart <span class="badge" id="cartCount">2</span>
+    </a>
+    <a href="login.html" class="btn">Login</a>
+  </div>
 </nav>
 
-<section class="hero">
-  <h1>Transform Your Future with Education</h1>
-  <p>Learn new skills, track progress, and explore academic resources</p>
-  <button>Get Started</button>
-</section>
-
-<section class="features">
-  <h2>Why Choose EduLearn</h2>
-
-  <div class="feature-grid">
-    <div class="feature-card">📚 Quality Courses</div>
-    <div class="feature-card">📈 Track Progress</div>
-    <div class="feature-card">💬 Community Forum</div>
-    <div class="feature-card">🛒 Bookstore Access</div>
+<section class="hero-wrapper" style="background: linear-gradient(to right, rgba(248,250,252,0.95) 0%, rgba(248,250,252,0.7) 100%), url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2000&auto=format&fit=crop') center/cover; padding: 40px 0;">
+  <div class="hero" style="padding-top: 40px; padding-bottom: 40px;">
+  <div class="hero-content">
+    <h1>Transform Your Future<br>with <span>Quality Education</span></h1>
+    <p>Access world-class courses, connect with peers, and achieve your academic goals with our comprehensive learning platform.</p>
+    <div style="display: flex; gap: 16px;">
+      <a href="courses.html" class="btn">Explore Courses ➔</a>
+      <a href="signup.html" class="btn btn-outline">Get Started</a>
+    </div>
+  </div>
+  
+  <div class="hero-features">
+    <div class="feature-box">
+      <div class="feature-icon">▶️</div>
+      <h3>Video Lectures</h3>
+      <p>High-quality video content from experts</p>
+    </div>
+    <div class="feature-box">
+      <div class="feature-icon">📄</div>
+      <h3>Study Materials</h3>
+      <p>Comprehensive notes and resources</p>
+    </div>
+    <div class="feature-box">
+      <div class="feature-icon">💬</div>
+      <h3>Discussion Forum</h3>
+      <p>Collaborate with peers</p>
+    </div>
+    <div class="feature-box">
+      <div class="feature-icon">🏅</div>
+      <h3>Certifications</h3>
+      <p>Earn recognized certificates</p>
+    </div>
+  </div>
   </div>
 </section>
 
-<section class="courses">
-  <h2>Popular Courses</h2>
+<section class="stats">
+  <div class="stat-item">
+    <h2>10,000+</h2>
+    <p>Active Students</p>
+  </div>
+  <div class="stat-item">
+    <h2>500+</h2>
+    <p>Courses</p>
+  </div>
+  <div class="stat-item">
+    <h2>100+</h2>
+    <p>Expert Instructors</p>
+  </div>
+  <div class="stat-item">
+    <h2>95%</h2>
+    <p>Success Rate</p>
+  </div>
+</section>
 
-  <div class="course-grid">
-    <div class="course-card">
-      <h3>Web Development</h3>
-      <p>HTML, CSS, JavaScript</p>
+<section class="why-choose">
+  <h2>Why Choose EduLearn?</h2>
+  <p>Our platform provides everything you need for successful learning</p>
+  
+  <div class="grid" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="card" style="padding: 24px;">
+      <div class="feature-icon" style="font-size: 32px;">📘</div>
+      <h3 style="margin: 16px 0 8px; font-size: 18px;">Extensive Course Library</h3>
+      <p style="color: var(--text-light); font-size: 14px;">Access hundreds of courses across multiple subjects and skill levels.</p>
     </div>
-
-    <div class="course-card">
-      <h3>Database Design</h3>
-      <p>SQL & ERD</p>
+    <div class="card" style="padding: 24px;">
+      <div class="feature-icon" style="font-size: 32px;">👥</div>
+      <h3 style="margin: 16px 0 8px; font-size: 18px;">Community Learning</h3>
+      <p style="color: var(--text-light); font-size: 14px;">Connect with peers, share knowledge, and grow together.</p>
     </div>
-
-    <div class="course-card">
-      <h3>Computer Vision</h3>
-      <p>AI & Image Processing</p>
+    <div class="card" style="padding: 24px;">
+      <div class="feature-icon" style="font-size: 32px;">🏅</div>
+      <h3 style="margin: 16px 0 8px; font-size: 18px;">Track Your Progress</h3>
+      <p style="color: var(--text-light); font-size: 14px;">Monitor your learning journey with detailed analytics and achievements.</p>
+    </div>
+    <div class="card" style="padding: 24px;">
+      <div class="feature-icon" style="font-size: 32px;">📈</div>
+      <h3 style="margin: 16px 0 8px; font-size: 18px;">Expert Instruction</h3>
+      <p style="color: var(--text-light); font-size: 14px;">Learn from industry professionals and academic experts.</p>
     </div>
   </div>
 </section>
 
-<section class="hero">
-  <h1>Ready to Start Learning?</h1>
-  <p>join thousands of students already achieving their goals</p>
-  <button><a href="signup.html">Create an free Account</a></button>
+
+<section class="popular-courses">
+  <div class="section-header">
+    <div>
+      <h2>Popular Courses</h2>
+      <p style="color: var(--text-light); margin: 0;">Start learning with our most enrolled courses</p>
+    </div>
+    <a href="courses.html" style="color: var(--primary-blue); font-weight: 500;">View All ➔</a>
+  </div>
+  
+  <div class="grid" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="card">
+      <div class="course-image">📘</div>
+      <div class="course-content">
+        <div class="course-tags">
+          <span class="tag">Computer Science</span>
+        </div>
+        <h3>Introduction to Computer Science</h3>
+        <p>Dr. Sarah Johnson</p>
+        <div class="course-meta">
+          <span>👥 1234 students</span>
+          <span>⏱ 12 weeks</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="course-image">📘</div>
+      <div class="course-content">
+        <div class="course-tags">
+          <span class="tag">Mathematics</span>
+        </div>
+        <h3>Calculus II</h3>
+        <p>Prof. Michael Chen</p>
+        <div class="course-meta">
+          <span>👥 856 students</span>
+          <span>⏱ 10 weeks</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="course-image">📘</div>
+      <div class="course-content">
+        <div class="course-tags">
+          <span class="tag">Physics</span>
+        </div>
+        <h3>Physics Fundamentals</h3>
+        <p>Dr. Emily Rodriguez</p>
+        <div class="course-meta">
+          <span>👥 692 students</span>
+          <span>⏱ 8 weeks</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-banner">
+  <h2>Ready to Start Learning?</h2>
+  <p>Join thousands of students already achieving their academic goals</p>
+  <a href="signup.html" class="btn">Create Free Account ➔</a>
 </section>
 
 <footer>
-  <p>© 2026 EduLearn</p>
+  <div class="footer-content">
+    <div class="footer-brand">
+      <h2><img src="images/The_Logo_of_the_University_of_Technology_Sarawak.png" alt="UTS Logo" class="logo-img"> EduLearn</h2>
+      <p>Empowering students through quality education</p>
+    </div>
+    <div class="footer-links">
+      <h4>Platform</h4>
+      <ul>
+        <li><a href="courses.html">Courses</a></li>
+        <li><a href="forum.html">Forum</a></li>
+        <li><a href="bookstore.html">Bookstore</a></li>
+      </ul>
+    </div>
+    <div class="footer-links">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="footer-links">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 EduLearn. All rights reserved.</p>
+  </div>
 </footer>
 
-<script src="js/script.js"></script>
+<script src="js/script.js?v=7"></script>
 </body>
 </html>

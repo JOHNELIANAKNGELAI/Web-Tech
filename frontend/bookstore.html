@@ -1,68 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<link rel="stylesheet" href="css/style.css">
-<title>Bookstore</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <title>EduLearn | Bookstore</title>
 </head>
-
 <body>
 
 <nav>
-  <h2>EduLearn</h2>
+  <div class="logo-container">
+    <img src="images/The_Logo_of_the_University_of_Technology_Sarawak.png" alt="UTS Logo" class="logo-img">
+    <h2>EduLearn</h2>
+  </div>
   <ul>
     <li><a href="homepage.html">Home</a></li>
     <li><a href="courses.html">Courses</a></li>
     <li><a href="forum.html">Forum</a></li>
-    <li><a href="bookstore.html">Bookstore</a></li>
-    <li><a href="login.html">Login</a></li>
-    <li><a href="signup.html">Sign Up</a></li>
-    <li>
-      <a href="purchases.html">
-        Cart <span id="cartCount" class="badge">0</span>
-      </a>
-    </li>
+    <li><a href="bookstore.html" class="active">Bookstore</a></li>
   </ul>
+  <div class="nav-actions">
+    <a href="purchases.html" class="cart-icon">
+      Cart <span class="badge" id="cartCount">2</span>
+    </a>
+    <a href="login.html" class="btn">Login</a>
+  </div>
 </nav>
 
-<div class="container">
-
-<h2>Bookstore</h2>
-
-<div class="course-controls">
-
-  <input type="text" id="bookSearch" placeholder="Search books..." class="search-box">
-
-  <div class="filter-container">
-    <button id="bookFilterToggle">All ⏷</button>
-
-    <div class="filter-dropdown" id="bookFilterMenu" style="display:none;">
-      <button data-category="all">All</button>
-      <button data-category="ai">AI</button>
-      <button data-category="db">Database</button>
+<div class="page-container">
+  <div class="page-header">
+    <h1>Academic Bookstore</h1>
+    <p>Find textbooks and study materials for your courses</p>
+  </div>
+  
+  <div class="filters-bar">
+    <div class="search-input">
+      🔍 <input type="text" id="bookSearchInput" placeholder="Search books or authors...">
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px; border-left: 1px solid var(--border-color); padding-left: 16px;">
+      <span style="color: var(--text-light);">🜲</span>
+      <select class="filter-select" id="bookCategorySelect" style="min-width: 120px;">
+        <option value="All">All Categories</option>
+      </select>
     </div>
   </div>
-
-</div>
-
-<div class="grid" id="bookList">
-
-  <div class="card" data-category="ai">
-    <img src="images/book1.jpg">
-    <h3>Machine Learning</h3>
-    <p>$29</p>
-    <button onclick="addToCart('Machine Learning', 29)">Add to Cart</button>
-
-  <div class="card" data-category="db">
-    <img src="images/book2.jpg">
-    <h3>Database Systems</h3>
-    <p>$25</p>
-    <button onclick="addToCart('Database Systems', 25)">Add to Cart</button>
+  
+  <p style="color: var(--text-light); margin-bottom: 24px; font-size: 14px;">Showing 8 of 8 books</p>
+  
+  <div class="grid" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="card">
+      <div class="book-cover" style="background-image: url('https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=600&auto=format&fit=crop');"></div>
+      <div class="book-content">
+        <div class="course-tags">
+          <span class="tag">Computer Science</span>
+        </div>
+        <h3 style="font-size: 16px; margin: 0 0 8px;">Introduction to Algorithms</h3>
+        <p style="color: var(--text-light); font-size: 13px; margin: 0;">Thomas H. Cormen</p>
+        <div class="book-price">$89.99</div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="book-cover" style="background-image: url('https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=600&auto=format&fit=crop');"></div>
+      <div class="book-content">
+        <div class="course-tags">
+          <span class="tag">Biology</span>
+          <span class="tag error">Out of Stock</span>
+        </div>
+        <h3 style="font-size: 16px; margin: 0 0 8px;">Campbell Biology</h3>
+        <p style="color: var(--text-light); font-size: 13px; margin: 0;">Lisa A. Urry</p>
+        <div class="book-price" style="color: var(--text-light); text-decoration: line-through;">$130.00</div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="book-cover" style="background-image: url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=600&auto=format&fit=crop');"></div>
+      <div class="book-content">
+        <div class="course-tags">
+          <span class="tag">Mathematics</span>
+        </div>
+        <h3 style="font-size: 16px; margin: 0 0 8px;">Calculus: Early Transcendentals</h3>
+        <p style="color: var(--text-light); font-size: 13px; margin: 0;">James Stewart</p>
+        <div class="book-price">$119.50</div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="book-cover" style="background-image: url('https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?q=80&w=600&auto=format&fit=crop');"></div>
+      <div class="book-content">
+        <div class="course-tags">
+          <span class="tag">Physics</span>
+        </div>
+        <h3 style="font-size: 16px; margin: 0 0 8px;">University Physics</h3>
+        <p style="color: var(--text-light); font-size: 13px; margin: 0;">Hugh D. Young</p>
+        <div class="book-price">$145.00</div>
+      </div>
+    </div>
   </div>
-
 </div>
 
-</div>
-
-<script src="js/script.js"></script>
+<script src="js/script.js?v=7"></script>
 </body>
 </html>

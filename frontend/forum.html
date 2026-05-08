@@ -1,38 +1,124 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <title>EduLearn | Forum</title>
 </head>
 <body>
 
 <nav>
-  <h2>EduLearn</h2>
+  <div class="logo-container">
+    <img src="images/The_Logo_of_the_University_of_Technology_Sarawak.png" alt="UTS Logo" class="logo-img">
+    <h2>EduLearn</h2>
+  </div>
   <ul>
     <li><a href="homepage.html">Home</a></li>
     <li><a href="courses.html">Courses</a></li>
-    <li><a href="forum.html">Forum</a></li>
+    <li><a href="forum.html" class="active">Forum</a></li>
     <li><a href="bookstore.html">Bookstore</a></li>
-    <li><a href="login.html">Login</a></li>
-    <li><a href="signup.html">Sign Up</a></li>
-    <li>
-      <a href="purchases.html">
-        Cart <span id="cartCount" class="badge">0</span>
-      </a>
-    </li>
   </ul>
+  <div class="nav-actions">
+    <a href="purchases.html" class="cart-icon">
+      Cart <span class="badge" id="cartCount">2</span>
+    </a>
+    <a href="login.html" class="btn">Login</a>
+  </div>
 </nav>
 
-<div class="container">
-<h2>Forum</h2>
-
-<textarea id="postInput" placeholder="Ask something..."></textarea>
-<input id="authorInput" placeholder="Your name">
-<button onclick="addPost()">Post</button>
-
-<div id="posts"></div>
-
+<div class="page-container">
+  <div class="page-header">
+    <h1>Discussion Forum</h1>
+    <p>Ask questions, share knowledge, and connect with peers</p>
+  </div>
+  
+  <div class="filters-bar">
+    <div class="search-input">
+      🔍 <input type="text" placeholder="Search discussions...">
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; border-left: 1px solid var(--border-color); padding-left: 16px;">
+      <span style="color: var(--text-light);">🜲</span>
+      <select class="filter-select">
+        <option>All</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="forum-list">
+    <div class="forum-card">
+      <div class="forum-header">
+        <h3><a href="replies.html">How to implement binary search trees?</a></h3>
+        <span class="tag success">Answered</span>
+      </div>
+      <div class="forum-body">
+        I'm struggling with understanding the concept of BST traversal. Can someone explain the difference between inorder, preorder, and postorder?
+      </div>
+      <div class="forum-meta">
+        <div class="avatar" style="background: #2563EB;">S</div>
+        <span>Sarah Chen</span>
+        <span class="meta-divider">•</span>
+        <span>2 hours ago</span>
+        <span class="meta-divider">•</span>
+        <span class="tag">Computer Science</span>
+      </div>
+      <div class="forum-stats">
+        <span>👍 12</span>
+        <span>💬 5 replies</span>
+        <span style="color: var(--text-light); background: #F1F5F9; padding: 2px 8px; border-radius: 4px; font-size: 12px;">#data-structures</span>
+        <span style="color: var(--text-light); background: #F1F5F9; padding: 2px 8px; border-radius: 4px; font-size: 12px;">#algorithms</span>
+      </div>
+    </div>
+    
+    <div class="forum-card">
+      <div class="forum-header">
+        <h3>Integration by parts confusion</h3>
+        <span class="tag success">Answered</span>
+      </div>
+      <div class="forum-body">
+        When solving integration by parts problems, how do you decide which function to choose as u and which as dv?
+      </div>
+      <div class="forum-meta">
+        <div class="avatar" style="background: #3B82F6;">M</div>
+        <span>Mike Johnson</span>
+        <span class="meta-divider">•</span>
+        <span>5 hours ago</span>
+        <span class="meta-divider">•</span>
+        <span class="tag">Mathematics</span>
+      </div>
+      <div class="forum-stats">
+        <span>👍 8</span>
+        <span>💬 3 replies</span>
+        <span style="color: var(--text-light); background: #F1F5F9; padding: 2px 8px; border-radius: 4px; font-size: 12px;">#calculus</span>
+        <span style="color: var(--text-light); background: #F1F5F9; padding: 2px 8px; border-radius: 4px; font-size: 12px;">#integration</span>
+      </div>
+    </div>
+    
+    <div class="forum-card">
+      <div class="forum-header">
+        <h3>Newton's third law application</h3>
+      </div>
+      <div class="forum-body">
+        Can someone provide real-world examples of Newton's third law? I understand the theory but struggling with applications.
+      </div>
+      <div class="forum-meta">
+        <div class="avatar" style="background: #6366F1;">E</div>
+        <span>Emily Rodriguez</span>
+        <span class="meta-divider">•</span>
+        <span>1 day ago</span>
+        <span class="meta-divider">•</span>
+        <span class="tag">Physics</span>
+      </div>
+      <div class="forum-stats">
+        <span>👍 15</span>
+        <span>💬 7 replies</span>
+        <span style="color: var(--text-light); background: #F1F5F9; padding: 2px 8px; border-radius: 4px; font-size: 12px;">#physics</span>
+        <span style="color: var(--text-light); background: #F1F5F9; padding: 2px 8px; border-radius: 4px; font-size: 12px;">#mechanics</span>
+      </div>
+    </div>
+  </div>
 </div>
 
-<script src="js/script.js"></script>
+<script src="js/script.js?v=7"></script>
 </body>
 </html>

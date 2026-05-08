@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <title>EduLearn | Course Content</title>
+  <style>
+    .course-layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+    
+    .course-sidebar {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border: 1px solid var(--border-color);
+      height: fit-content;
+    }
+    
+    .module-item {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .module-item:hover {
+      background: #F8FAFC;
+    }
+    
+    .module-item.active {
+      background: #EFF6FF;
+      border-left: 4px solid var(--primary-blue);
+      font-weight: 600;
+      color: var(--primary-blue);
+    }
+    
+    .module-icon {
+      background: white;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .content-area {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border: 1px solid var(--border-color);
+    }
+    
+    .video-container {
+      width: 100%;
+      height: 400px;
+      background: #0F172A;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      color: white;
+      position: relative;
+    }
+    
+    .play-btn {
+      width: 64px;
+      height: 64px;
+      background: var(--primary-blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    
+    .play-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .notes-section {
+      line-height: 1.8;
+      color: var(--text-dark);
+    }
+
+    .quiz-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 24px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .course-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo-container">
+    <img src="images/The_Logo_of_the_University_of_Technology_Sarawak.png" alt="UTS Logo" class="logo-img">
+    <h2>EduLearn</h2>
+  </div>
+  <ul>
+    <li><a href="homepage.html">Home</a></li>
+    <li><a href="courses.html" class="active">Courses</a></li>
+    <li><a href="forum.html">Forum</a></li>
+    <li><a href="bookstore.html">Bookstore</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="purchases.html" class="cart-icon">
+      Cart <span class="badge" id="cartCount">0</span>
+    </a>
+    <a href="login.html" class="btn">Login</a>
+  </div>
+</nav>
+
+<div class="page-container">
+  <a href="courses.html" style="color: var(--primary-blue); font-weight: 500; display: inline-block; margin-bottom: 16px;">← Back to Courses</a>
+  
+  <div class="page-header" style="margin-bottom: 0;">
+    <h1 id="contentCourseTitle">Course Title</h1>
+    <p id="contentCourseInstructor">Instructor Name</p>
+  </div>
+  
+  <div class="course-layout">
+    <div class="course-sidebar">
+      <h3 style="margin-top: 0; margin-bottom: 16px;">Course Modules</h3>
+      <div id="moduleList">
+        <div class="module-item active" onclick="switchModule(0)">
+          <div class="module-icon">▶️</div>
+          <div>Lecture 1: Introduction</div>
+        </div>
+        <div class="module-item" onclick="switchModule(1)">
+          <div class="module-icon">📄</div>
+          <div>Lecture Notes</div>
+        </div>
+        <div class="module-item" onclick="switchModule(2)">
+          <div class="module-icon">▶️</div>
+          <div>Lecture 2: Core Concepts</div>
+        </div>
+        <div class="module-item" onclick="switchModule(3)">
+          <div class="module-icon">📝</div>
+          <div>Interactive Quiz 1</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="content-area" id="mainContentArea">
+      <!-- Dynamic content injected via JS -->
+    </div>
+  </div>
+</div>
+
+<script src="js/script.js?v=7"></script>
+</body>
+</html>
